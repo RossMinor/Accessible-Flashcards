@@ -13,7 +13,8 @@ def editCard(back):
 	if back == True:
 		back = ""
 	
-	
+print("Welcome to Accessible Flashcards!\nTo stay up to date on updates and bug fixes, be sure to check the Github repo at:\nhttps://github.com/RossMinor/Accessible-Flashcards\nor follow me on Twitter:\n@Ross_Minor")	
+
 while True: #stop forgetting that true is caps
 	UserInput = input("What would you like to do?\n1 = Create new set\n2 = Study set\n3 = Add cards to a set\n0 = exit")
 	if UserInput == "1":
