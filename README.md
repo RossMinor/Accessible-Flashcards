@@ -1,5 +1,4 @@
 # Accessible-Flashcards
-A console based flashcard program for those who are blind. Supports creating, editing, and adding cards to a set.
 
 ## About
 <p>BlindFlash is a console based flashcard program intended to make it easier for those who are blind to study flash cards. If you are not blind, you are of course welcome to use BlindFlash, it just may not be the prettiest!</p>
