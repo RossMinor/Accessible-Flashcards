@@ -16,7 +16,7 @@ def editCard(back):
 print("Welcome to Accessible Flashcards!\nTo stay up to date on updates and bug fixes, be sure to check the Github repo at:\nhttps://github.com/RossMinor/Accessible-Flashcards\nor follow me on Twitter:\n@Ross_Minor")	
 
 while True: #stop forgetting that true is caps
-	UserInput = input("What would you like to do?\n1 = Create new set\n2 = Study set\n3 = Add cards to a set\n0 = exit")
+	UserInput = input("What would you like to do?\n1 = Create new set\n2 = Study set\n3 = Add cards to a set\n4 = Search a set\n0 = exit")
 	if UserInput == "1":
 		#Asks for card front and back. Card front and back are then added to the card dictionary. Typing done breaks the loop.
 		while True:
@@ -190,11 +190,21 @@ while True: #stop forgetting that true is caps
 		
 		SearchResults = {}
 		for x in InputDict:
-			if x == UserInput:
+			if UserInput in x:
 				SearchResults[x] = InputDict[x]
-			if InputDict[x] == UserInput:
+			if UserInput in InputDict[x]:
 				SearchResults[x] = InputDict[x]
-		print(SearchResults)
+		if SearchResults:		
+			print("Search results:")
+		else:
+			print("Sorry, nothing was found. Make sure your spelling is correct, otherwise try to simplify your search.")
+		Count = 0
+		for x in SearchResults:
+			Count += 1
+			print(str(Count) + ". " + x + ":\n   " + SearchResults[x])
+
+
+
 	
 	
 	if UserInput == "0":
