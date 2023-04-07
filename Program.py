@@ -2,17 +2,15 @@ import json
 import random
 import pyperclip as Pc
 import textwrap
+from os import walk
 
 Card = {}
-File = ""
-CurrentSet = ""
+File = open("Data.json", "r")
+LastDirUsed = json.load(File) #Loads the json file into a dictionary
+File.close()
+Data = {}
+UserInput = ""
 
-def editCard(back):
-	if back == False:
-		back = ""
-	if back == True:
-		back = ""
-	
 print("Welcome to Accessible Flashcards!\nTo stay up to date on updates and bug fixes, be sure to check the Github repo at:\nhttps://github.com/RossMinor/Accessible-Flashcards\nor follow me on Twitter:\n@Ross_Minor")	
 
 while True: #stop forgetting that true is caps
@@ -36,29 +34,55 @@ while True: #stop forgetting that true is caps
 
 		#Asks the user to name their set and creates a json file with the specified name. Dumps the card dictionary into the json file.
 		while True:
-			UserInput = input("Please name your set")
+			UserInput = input("Please type where you would like to save your set." + "\n if you would like to use the directory you have been working in, simply type the name of your set.")
 			if UserInput == "":
 				print("Please enter a value")
 				continue
-			else:
+			elif "\\" in UserInput:
 				File = open(UserInput+".json", "w")
 				json.dump(Card,File)
 				File.close()
 				break
-
+			else:
+				File = open(LastDirUsed["RecentDirPath"] + "\\" + UserInput + ".json", "w")
+				json.dump(Card,File)
+				File.close()
+				break
+		print("Set saved!")
 
 	if UserInput == "2":
 		#Asks the user for a json file name and loads the json file. The set is shuffled and then iterated through, first front and then back of card. 
+		Results = []
+		CurrentSet = ""
+		dirPath = ""
 		while True:
-			UserInput = input("Please enter the path to a JSON set.")
-			CurrentSet = UserInput
+			UserInput = input("Please enter the path to a folder with your JSON sets.\nYour last used folder was located at " + LastDirUsed["RecentDirPath"] + "\nIf you would like to use this folder, press enter")
 			if UserInput == "":
-				print("Please enter a value")
-				continue
+				DirPath = LastDirUsed["RecentDirPath"]
+			else:
+				DirPath = UserInput
 
-			#If the file can not be found, print the error message.
+			#Saving the recently used directory path
+			Data["RecentDirPath"] = DirPath
+			File = open("Data.json", "w")
+			json.dump(Data,File)
+			File.close()
+				
+
+			for (DirPath, DirNames, FileNames) in walk(DirPath):
+				Results.extend(FileNames)
+		
+			Count = 0
+			IndexedResults = {}
+			for x in Results:
+				Count += 1			
+				print(str(Count) + ". " + x + "\n")
+				IndexedResults[Count] = x
+
+			UserInput = input("Type the number of the set you would like to load")
+
 			try:
-				File = open(UserInput+".json", "r")
+				File = open(DirPath + "\\" + IndexedResults[int(UserInput)], "r")
 				InputDict = json.load(File) #Loads the json file into a dictionary
 				File.close()
 			except:
@@ -66,7 +90,8 @@ while True: #stop forgetting that true is caps
 				continue
 			else:
 				break
-
+		
+		CurrentSet = IndexedResults[int(UserInput)]
 		WorkingDict = InputDict.copy()
 		
 		TempList = list(WorkingDict.keys()) #Creates a list out of the dictionary so it can be iterated through.
@@ -81,7 +106,7 @@ while True: #stop forgetting that true is caps
 			elif UserInput == "delete":
 				InputDict.pop(RandomKey)
 				WorkingDict.pop(RandomKey)
-				File = open(CurrentSet+".json", "w")
+				File = open(DirPath + "\\" + CurrentSet + ".json", "w")
 				json.dump(InputDict,File)
 				File.close()
 				continue
@@ -93,7 +118,7 @@ while True: #stop forgetting that true is caps
 				WorkingDict.pop(RandomKey)
 				
 				#Saves the new dictionary in the same JSON file.
-				File = open(CurrentSet+".json", "w")
+				File = open(DirPath + "\\" + CurrentSet + ".json", "w")
 				json.dump(InputDict,File)
 				File.close()
 				continue
@@ -105,7 +130,7 @@ while True: #stop forgetting that true is caps
 			elif UserInput == "delete":
 				InputDict.pop(RandomKey)
 				WorkingDict.pop(RandomKey)
-				File = open(CurrentSet+".json", "w")
+				File = open(DirPath + "\\" + CurrentSet, "w")
 				json.dump(InputDict,File)
 				File.close()
 				continue
@@ -116,7 +141,7 @@ while True: #stop forgetting that true is caps
 				WorkingDict.pop(RandomKey)
 
 				#Saves the JSON file.
-				File = open(CurrentSet+".json", "w")
+				File = open(DirPath + "\\" + CurrentSet, "w")
 				json.dump(InputDict,File)
 				File.close()
 				continue #Restarts the loop so the updated dictionary (InputDict) can be used.
@@ -125,16 +150,38 @@ while True: #stop forgetting that true is caps
 		
 		
 	if UserInput == "3":
+		#Asks the user for a json file name and loads the json file. The set is shuffled and then iterated through, first front and then back of card. 
+		Results = []
+		CurrentSet = ""
+		dirPath = ""
 		while True:
-			UserInput = input("Please put the set you would like to open in the directory of this program, then type the file name")
-			CurrentSet = UserInput
+			UserInput = input("Please enter the path to a folder with your JSON sets.\nYour last used folder was located at " + LastDirUsed["RecentDirPath"] + "\nIf you would like to use this folder, press enter")
 			if UserInput == "":
-				print("Please enter a value")
-				continue
+				DirPath = LastDirUsed["RecentDirPath"]
+			else:
+				DirPath = UserInput
 
-			#If the file can not be found, print the error message.
+			#Saving the recently used directory path
+			Data["RecentDirPath"] = DirPath
+			File = open("Data.json", "w")
+			json.dump(Data,File)
+			File.close()
+				
+
+			for (DirPath, DirNames, FileNames) in walk(DirPath):
+				Results.extend(FileNames)
+		
+			Count = 0
+			IndexedResults = {}
+			for x in Results:
+				Count += 1			
+				print(str(Count) + ". " + x + "\n")
+				IndexedResults[Count] = x
+
+			UserInput = input("Type the number of the set you would like to load")
+
 			try:
-				File = open(UserInput+".json", "r")
+				File = open(DirPath + "\\" + IndexedResults[int(UserInput)], "r")
 				InputDict = json.load(File) #Loads the json file into a dictionary
 				File.close()
 			except:
@@ -142,7 +189,9 @@ while True: #stop forgetting that true is caps
 				continue
 			else:
 				break
-	
+		
+		CurrentSet = IndexedResults[int(UserInput)]
+				
 		input("Adding cards to " + CurrentSet + ".")
 
 		while True:
@@ -160,23 +209,45 @@ while True: #stop forgetting that true is caps
 				continue
 			InputDict[UserInputFront] = UserInputBack
 
-		File = open(CurrentSet+".json", "w")
+		File = open(DirPath + "\\" + CurrentSet, "w")
 		json.dump(InputDict,File)
 		File.close()
 		print("cards saved.")
 	
 	
 	if UserInput == "4":
+#Asks the user for a json file name and loads the json file. The set is shuffled and then iterated through, first front and then back of card. 
+		Results = []
+		CurrentSet = ""
+		dirPath = ""
 		while True:
-			UserInput = input("Please enter the path to a JSON set.")
-			CurrentSet = UserInput
+			UserInput = input("Please enter the path to a folder with your JSON sets.\nYour last used folder was located at " + LastDirUsed["RecentDirPath"] + "\nIf you would like to use this folder, press enter")
 			if UserInput == "":
-				print("Please enter a value")
-				continue
+				DirPath = LastDirUsed["RecentDirPath"]
+			else:
+				DirPath = UserInput
 
-		#If the file can not be found, print the error message.
+			#Saving the recently used directory path
+			Data["RecentDirPath"] = DirPath
+			File = open("Data.json", "w")
+			json.dump(Data,File)
+			File.close()
+				
+
+			for (DirPath, DirNames, FileNames) in walk(DirPath):
+				Results.extend(FileNames)
+		
+			Count = 0
+			IndexedResults = {}
+			for x in Results:
+				Count += 1			
+				print(str(Count) + ". " + x + "\n")
+				IndexedResults[Count] = x
+
+			UserInput = input("Type the number of the set you would like to load")
+
 			try:
-				File = open(UserInput+".json", "r")
+				File = open(DirPath + "\\" + IndexedResults[int(UserInput)], "r")
 				InputDict = json.load(File) #Loads the json file into a dictionary
 				File.close()
 			except:
@@ -184,7 +255,9 @@ while True: #stop forgetting that true is caps
 				continue
 			else:
 				break
-
+		
+		CurrentSet = IndexedResults[int(UserInput)]
+		
 		UserInput = input("Type the text you would like to search for.")
 		
 		
