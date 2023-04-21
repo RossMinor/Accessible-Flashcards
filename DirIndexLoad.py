@@ -1,18 +1,26 @@
 import json
 from os import walk
 
-File = open("Data.json", "r")
-LastDirUsed = json.load(File) #Loads the json file into a dictionary
-File.close()
+try:
+	File = open("Data.json", "r")
+	LastDirUsed = json.load(File) #Loads the json file into a dictionary
+	File.close()
+except:
+	LastDirUsed = {}
+
 Data = {}
 
 def DirIndexLoad():
 	Results = []
 	CurrentSet = ""
 	dirPath = ""
+	#input(LastDirUsed)
 	
 	while True:
-		UserInput = input("Please enter the path to a folder with your JSON sets.\nYour last used folder was located at " + LastDirUsed["RecentDirPath"] + "\nIf you would like to use this folder, press enter")
+		try:
+			UserInput = input("Please enter the path to a folder with your JSON sets.\nYour last used folder was located at " + LastDirUsed["RecentDirPath"] + "\nIf you would like to use this folder, press enter")
+		except:
+			UserInput = input("Please enter the path to a folder with your JSON sets.")
 		if UserInput == "":
 			DirPath = LastDirUsed["RecentDirPath"]
 		else:

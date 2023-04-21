@@ -2,12 +2,10 @@ import json
 import random
 import pyperclip as Pc
 import textwrap
-
 from DirIndexLoad import *
 
 Card = {}
 UserInput = ""
-
 
 print("Welcome to Accessible Flashcards!\nTo stay up to date on updates and bug fixes, be sure to check the Github repo at:\nhttps://github.com/RossMinor/Accessible-Flashcards\nor follow me on Twitter:\n@Ross_Minor")	
 
